@@ -21,3 +21,16 @@ Inside the whole list, there should be some package called `iota-wallet-python` 
 
 *NOTE: This implementation was done with the wheel `iota_wallet_python-0.2.0-cp36-abi3-macosx_10_7_x86_64.whl`*
 
+
+## Capabilities
+
+This simple wallet has an integrated user-management-system, meaning you can create multiple users, which can then create an account on the IOTA-Blockchain. This functionality would also been provided by the IOTA-library, but we were pretty lost in the beginning and didn't look close enough...🙄
+
+Other than the user-management, the client can communicate with the IOTA blockchain (TestNet) and do the following things:
+ - Create a new Account on the IOTA-Blockchain
+ - Check Balance of an Account
+ - Generate a new address for the account
+ - Send funds to another account
+ - List all transactions of the past and their confirmation-status
+
+Additionally the created users of the client are persistently stored and encrypted (but might not be enough) - the storage of the stronghold-password inside the .env-file is just a workaround to make the client work. This should be secured far better.
