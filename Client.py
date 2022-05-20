@@ -1,4 +1,5 @@
 
+from InputHelper import convert_input_to_int
 from UserManager import UserManager
 from getpass import getpass
 
@@ -13,16 +14,9 @@ class Client:
         print("Choose one of the following tasks:")
         print("[1] - List of all Users")
         print("[2] - Login into one User")
-        print("[3] - Add new User to Wallet")
-        print("[4] - Remove User from Wallet")
-        print("[9] - Exit the Wallet")
-    
-    def convert_input_to_int(self, menu_choice):
-        try:
-            return int(menu_choice)
-        except (ValueError):
-            print("Invalid Input")
-            return 0
+        print("[3] - Add new User to Client")
+        print("[4] - Remove User from Client")
+        print("[9] - Exit the Client")
         
     def check_choice(self, menu_choice):
         if menu_choice == 1:
@@ -31,6 +25,7 @@ class Client:
         if menu_choice == 2:
             username = self.login()
             wallet = Wallet(username)
+            wallet.run()
             return
         if menu_choice == 3:
             self.create_new_user()
@@ -41,7 +36,7 @@ class Client:
     
     def print_all_users(self):
         users = self.usermanager.get_all_users()
-        print("### USERLIST ###")
+        print("--- 🙋 Userlist 🙋 ---")
         if len(users) == 0:
             print("Nothing to see here...")
         count = 1
@@ -77,11 +72,11 @@ class Client:
 
     def login(self) -> str:
         self.print_all_users()
-        user_choice = self.convert_input_to_int(input("Choose the number of user you want to login into: "))
+        user_choice = convert_input_to_int(input("Choose the number of user you want to login into: "))
         while not 0 < user_choice <= len(self.usermanager.get_all_users()):
             print("Invalid User-Choice!")
             self.print_all_users()
-            user_choice = self.convert_input_to_int(input("Choose the number of user you want to login into: "))
+            user_choice = convert_input_to_int(input("Choose the number of user you want to login into: "))
         
         username = self.usermanager.get_username_by_index(user_choice - 1)
 
@@ -100,5 +95,8 @@ class Client:
         print("Welcome to simple.iota!")
         while menu_choice != 9:
             self.print_menu()
-            menu_choice = self.convert_input_to_int(input("> "))
+            menu_choice = convert_input_to_int(input("> "))
             self.check_choice(menu_choice)
+        
+        print("See ya...👋")
+

@@ -3,6 +3,8 @@ import random
 import string
 import iota_wallet as iw
 
+from InputHelper import convert_input_to_int
+
 class Wallet:
     def __init__(self, username) -> None:
         self.username = username
@@ -93,6 +95,79 @@ class Wallet:
         }
         return client_options
 
+    def __synchronize(self) -> None:
+        status = self.account.sync().execute()
+    
+    def __get_balance(self) -> dict:
+        self.__synchronize()
+        return self.account.balance()
+
+    def __generate_new_address(self) -> list:
+        self.__synchronize()
+        return self.account.generate_address()
+
+    def __get_address_to(self):
+        to_address = input("Address of Receiver: ")
+        return to_address
+
+    def __get_transfer_amount(self):
+        amount = 0
+        while amount == 0:
+            amount = convert_input_to_int(input("Amount to transfer (Integer Only): "))
+        return amount
+
+    def print_menu(self) -> None:
+        print("")
+        print("Choose an Operation:")
+        print(" [1] - Check Balance")
+        print(" [2] - Generate Address")
+        print(" [3] - Send IOTA")
+        print(" [4] - List all transactions")
+        print(" [9] - Logout")
+
+    def exec(self, user_choice: int) -> None:
+        if user_choice == 1:
+            balance = self.__get_balance()
+            print("--- Balance ---")
+            print(f"Incoming: {balance.get('incoming')}")
+            print(f"Outgoing: {balance.get('outgoing')}")
+            print(f"Available: {balance.get('available')}")
+            print(f"Total: {balance.get('total')}")
+            return
+        if user_choice == 2:
+            new_address = self.__generate_new_address()
+            print(f"New Address generated: {new_address.get('address').get('inner')}")
+            return
+        if user_choice == 3:
+            to_address = self.__get_address_to()
+            amount = self.__get_transfer_amount()
+            transfer = iw.Transfer(amount=amount, address=to_address, remainder_value_strategy='ReuseAddress')
+            try:
+                node_response = self.account.transfer(transfer)
+                print(f"{amount} IOTA sent 🎉\nThould arrive soon ⏳")
+            except Exception as e:
+                print("Oops...something unexpected happened")
+                print(e)
+                print(node_response)
+                return
+            return
+        if user_choice == 4:
+            self.__synchronize()
+            print("")
+            print("--- 💰 Transactions 💰 ---")
+            for transaction in self.account.list_messages():
+                print(f"[{transaction['id']}] - Confirmed = {transaction['confirmed']}")
+            return
+        if user_choice == 9:
+            print()
+            print(f"Bye {self.username} 👋")
+            return
+        print("Invalid Operation!")
+
     def run(self):
-        
+        user_choice = 0
+        while user_choice != 9:
+            self.print_menu()
+            user_choice = convert_input_to_int(input("> "))
+            self.exec(user_choice)
         pass

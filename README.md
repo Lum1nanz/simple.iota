@@ -19,5 +19,5 @@ pip list
 
 Inside the whole list, there should be some package called `iota-wallet-python` with the version according to the wheel that was downloaded.
 
-
+*NOTE: This implementation was done with the wheel `iota_wallet_python-0.2.0-cp36-abi3-macosx_10_7_x86_64.whl`*
 
