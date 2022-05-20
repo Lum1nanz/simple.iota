@@ -1,7 +1,7 @@
 # simple.iota
 Simple implementation of a client that communicates with the IOTA-network.
 
-This implementation of a client (not a wallet) is made for the Blockchain-course @ FHOOE (Hagenberg)
+This implementation of a client (not a wallet) is made for the Blockchain-course @ FHOOE (Hagenberg) by Matthias Lauß & Thomas Lumesberger
 
 ## Getting ready
 To get started, the IOTA foundation builds python wheels on [github](https://github.com/iotaledger/wallet.rs/actions/workflows/python_binding_publish.yml), which have to be installed manually - currently there no up-to-date library that can be installed via `pip`.
