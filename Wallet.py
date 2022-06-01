@@ -25,7 +25,7 @@ class Wallet:
             mnemonic = self.account_manager.generate_mnemonic()
             self.account_manager.store_mnemonic("Stronghold",mnemonic)
             print("########################################################")
-            print("Seed generated! Make sure you safe the following phrase!")
+            print("Seed generated! Make sure you save the following phrase!")
             print("########################################################")
             print(mnemonic)
         
@@ -116,6 +116,9 @@ class Wallet:
             amount = convert_input_to_int(input("Amount to transfer (Integer Only): "))
         return amount
 
+    def __get_latest_unused_address(self):
+        return self.account.latest_address()
+
     def print_menu(self) -> None:
         print("")
         print("Choose an Operation:")
@@ -123,6 +126,7 @@ class Wallet:
         print(" [2] - Generate Address")
         print(" [3] - Send IOTA")
         print(" [4] - List all transactions")
+        print(" [5] - Get latest unused address")
         print(" [9] - Logout")
 
     def exec(self, user_choice: int) -> None:
@@ -144,7 +148,7 @@ class Wallet:
             transfer = iw.Transfer(amount=amount, address=to_address, remainder_value_strategy='ReuseAddress')
             try:
                 node_response = self.account.transfer(transfer)
-                print(f"{amount} IOTA sent 🎉\nThould arrive soon ⏳")
+                print(f"{amount} IOTA sent 🎉\nShould arrive soon ⏳")
             except Exception as e:
                 print("Oops...something unexpected happened")
                 print(e)
@@ -157,6 +161,16 @@ class Wallet:
             print("--- 💰 Transactions 💰 ---")
             for transaction in self.account.list_messages():
                 print(f"[{transaction['id']}] - Confirmed = {transaction['confirmed']}")
+            return
+        if user_choice == 5:
+            self.__synchronize()
+            print("")
+            if not self.account.is_latest_address_unused():
+                print(f"No unused address found -> Generate one first (Option 2)")
+                return
+            unused_address = self.__get_latest_unused_address()
+            unused_address = unused_address['address']['inner']
+            print(f"Latest unused address: {unused_address}")
             return
         if user_choice == 9:
             print()
